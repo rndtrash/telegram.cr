@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-describe Telegram.cr do
+describe Telegram do
   # TODO: Write tests
 
   it "works" do

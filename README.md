@@ -15,7 +15,7 @@ dependencies:
 ## Usage
 
 ```crystal
-require "telegram.cr"
+require "telegram"
 ```
 
 TODO: Write usage instructions here

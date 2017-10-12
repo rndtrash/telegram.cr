@@ -1,3 +1,3 @@
-module Telegram.cr
+module Telegram
   VERSION = "0.1.0"
 end
