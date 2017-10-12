@@ -1,0 +1,9 @@
+name: telegram.cr
+version: 0.1.0
+
+authors:
+  - rndtrash <kuzmenko.ivan2002@yandex.com>
+
+crystal: 0.23.1
+
+license: MIT
