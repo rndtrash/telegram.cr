@@ -12,14 +12,26 @@ module Telegram
 
     def run
       loop do
-        responce = HTTP::Client.get "https://api.telegram.org/bot#{@token}/getUpdates?offset=#{@offset+1}"
+        url = "https://api.telegram.org/bot#{@token}/getUpdates?offset=#{@offset+1}"
+        responce = HTTP::Client.get url
         updates = Updates.from_json(responce.body)
-        updates.result.each do |element|
+        if !updates.ok
+          err = String.new
+          if (updates.error_code == 404 || updates.error_code == 401)
+            err = "Looks like your token doesn't exist."
+          end
+          raise("Error #{updates.error_code}: #{updates.description}. #{err}")
+        end
+        updates.result.not_nil!.each do |element|
           if @offset < element.update_id
             @offset = element.update_id
           end
-          puts element.update_id
-          call_event message_create, element.message.not_nil!
+          if element.message
+            call_event message_create, element.message.not_nil!
+          end
+          if element.edited_message
+            call_event message_edit, element.message.not_nil!
+          end
         end
       end
     end
@@ -44,7 +56,8 @@ module Telegram
       end
     end
 
-    event message_create, (Message | Nil)
+    event message_create, Message
+    event message_edit, Message
 
     def sendMessage(chat_id : (UInt32 | String), text : String)
       HTTP::Client.post_form("https://api.telegram.org/bot#{@token}/sendMessage", form: {"chat_id" => chat_id.to_s, "text" => text})

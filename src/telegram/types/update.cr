@@ -19,7 +19,9 @@ module Telegram
   struct Updates
     JSON.mapping(
       ok: Bool,
-      result: Array(Update)
+      error_code: UInt32?,
+      description: String?,
+      result: Array(Update)?
     )
   end
 end
